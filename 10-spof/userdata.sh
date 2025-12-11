@@ -3,12 +3,9 @@
 apt update
 apt install jq awscli openjdk-17-jdk -y
 
-cd
-git clone https://github.com/spring-projects/spring-petclinic
-cd spring-petclinic
-./mvnw -Dmaven.test.skip package
 
-FILE=$(ls target/*.jar)
+FILE=spring-petclinic-4.0.0-SNAPSHOT.jar
+wget https://github.com/ciberado/petclinic-terraform-workshop/blob/main/assets/$FILE
 
 
 java \
