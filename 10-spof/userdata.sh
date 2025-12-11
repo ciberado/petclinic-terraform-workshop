@@ -3,11 +3,12 @@
 apt update
 apt install jq awscli openjdk-17-jdk -y
 
+cd
 git clone https://github.com/spring-projects/spring-petclinic
 cd spring-petclinic
 ./mvnw -Dmaven.test.skip package
 
-FILE=$(ls /spring-petclinic/target/*.jar)
+FILE=$(ls target/*.jar)
 
 
 java \
