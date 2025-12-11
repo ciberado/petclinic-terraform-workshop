@@ -9,6 +9,13 @@ cd spring-petclinic
 
 FILE=$(ls /spring-petclinic/target/*.jar)
 
+
+java \
+  -Dserver.port=80 \
+  -jar $FILE
+
+# Run with MySQL profile:
+
 REGION=$(curl --silent http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
 
 MYSQL_ENDPOINT=$(aws ssm get-parameter \
@@ -32,4 +39,4 @@ java \
   -DMYSQL_USER=$MYSQL_USER \
   -DMYSQL_URL=$MYSQL_URL \
   -DMYSQL_PASS="$MYSQL_PASS" \
-  -jar target/spring-petclinic-3.0.0-SNAPSHOT.jar
+  -jar $FILE
