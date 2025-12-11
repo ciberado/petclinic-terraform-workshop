@@ -209,7 +209,6 @@ module "db" {
 
   db_name                = "petclinic"
   username               = "admin"
-  create_random_password = false
   password               = random_password.dbpassword.result
 
   port = 3306
