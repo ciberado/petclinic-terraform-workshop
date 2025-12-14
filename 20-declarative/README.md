@@ -31,7 +31,7 @@ To learn Terraform effectively, we'll use a practical example: infrastructure fo
 
 ```bash
 git clone https://github.com/ciberado/petclinic-terraform-workshop/
-cd petclinic-terraform-workshop/10-spof
+cd petclinic-terraform-workshop/20-declarative
 ```
 
 This clones a workshop repository containing progressive examples and navigates to a specific scenario (`10-spof`) that demonstrates handling single points of failure in infrastructure design.

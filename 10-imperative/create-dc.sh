@@ -250,6 +250,7 @@ aws rds create-db-instance \
   --port 3306 \
   --no-publicly-accessible \
   --tags "Key=Layer,Value=database" \
+  --no-cli-pager \
   --region ${REGION}
 
 echo "Waiting for RDS instance to be available..."
@@ -314,6 +315,7 @@ if [ -n "$USER_DATA" ]; then
     --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=${PREFIX}-${OWNER,,}},{Key=Layer,Value=computing}]" "ResourceType=volume,Tags=[{Key=Name,Value=${PREFIX}-${OWNER,,}}]" \
     --query 'Instances[0].InstanceId' \
     --output text \
+    --no-cli-pager \
     --region ${REGION})
 else
   INSTANCE_ID=$(aws ec2 run-instances \
@@ -328,6 +330,7 @@ else
     --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=${PREFIX}-${OWNER,,}},{Key=Layer,Value=computing}]" "ResourceType=volume,Tags=[{Key=Name,Value=${PREFIX}-${OWNER,,}}]" \
     --query 'Instances[0].InstanceId' \
     --output text \
+    --no-cli-pager \
     --region ${REGION})
 fi
 
