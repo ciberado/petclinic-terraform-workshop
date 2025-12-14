@@ -16,18 +16,18 @@ The `create-dc.sh` script creates a complete datacenter infrastructure for hosti
 ┌─────────────────────────────────────────────────────┐
 │                     VPC                             │
 │  ┌─────────────────┐    ┌─────────────────────────┐ │
-│  │ Public Subnet 1  │    │ Public Subnet 2        │ │
-│  │ (us-east-1a)    │    │ (us-east-1b)           │ │
-│  │                 │    │                        │ │
-│  │ [EC2 Instance]  │    │                        │ │
-│  │ PetClinic App   │    │                        │ │
+│  │ Public Subnet 1 │    │ Public Subnet 2         │ │
+│  │                 │    │                         │ │
+│  │                 │    │                         │ │
+│  │ [EC2 Instance]  │    │                         │ │
+│  │ PetClinic App   │    │                         │ │
 │  └─────────────────┘    └─────────────────────────┘ │
 │  ┌─────────────────┐    ┌─────────────────────────┐ │
-│  │Private Subnet 1 │    │ Private Subnet 2       │ │
-│  │ (us-east-1a)    │    │ (us-east-1b)           │ │
-│  │                 │    │                        │ │
-│  │                 │    │ [RDS MySQL]            │ │
-│  │                 │    │ Database               │ │
+│  │Private Subnet 1 │    │ Private Subnet 2        │ │
+│  │                 │    │                         │ │
+│  │                 │    │                         │ │
+│  │                 │    │ [RDS MySQL]             │ │
+│  │                 │    │ Database                │ │
 │  └─────────────────┘    └─────────────────────────┘ │
 └─────────────────────────────────────────────────────┘
 ```
