@@ -110,6 +110,22 @@ Ensure you have:
 - Bash shell environment
 - Internet connectivity for downloading the PetClinic application
 
+### Install the AWS CLI
+
+To invoke the AWS Api we will use the `aws` tool:
+
+```bash
+sudo apt update && sudo apt upgrade -y 
+sudo apt install -y unzip curl
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+```
+
+```bash
+aws --version
+```
+
 ### Getting the Workshop Materials
 
 To learn Terraform effectively, we'll use a practical example: infrastructure for the Spring PetClinic application.
@@ -118,6 +134,7 @@ To learn Terraform effectively, we'll use a practical example: infrastructure fo
 git clone https://github.com/ciberado/petclinic-terraform-workshop/
 cd petclinic-terraform-workshop/10-imperative
 ```
+
 
 ### Execution
 
