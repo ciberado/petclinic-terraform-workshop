@@ -232,16 +232,18 @@ aws rds create-db-subnet-group \
 
 echo "DB subnet group created"
 
+sleep 5
+
 # 8. CREATE RDS INSTANCE
 echo "Creating RDS MySQL instance (this will take several minutes)..."
 aws rds create-db-instance \
-  --db-instance-identifier "${PREFIX,,}db" \
+  --db-instance-identifier "${PREFIX,,}dbinstance" \
   --db-instance-class ${RDS_INSTANCE_TYPE} \
   --engine mysql \
-  --engine-version 5.7 \
   --master-username admin \
   --master-user-password "${DB_PASSWORD}" \
   --allocated-storage 20 \
+  --storage-type gp3 \
   --max-allocated-storage 100 \
   --db-name petclinic \
   --vpc-security-group-ids ${RDS_SG_ID} \
@@ -255,12 +257,12 @@ aws rds create-db-instance \
 
 echo "Waiting for RDS instance to be available..."
 aws rds wait db-instance-available \
-  --db-instance-identifier "${PREFIX,,}db" \
+  --db-instance-identifier "${PREFIX,,}dbinstance" \
   --region ${REGION}
 
 # Get RDS endpoint
 RDS_ENDPOINT=$(aws rds describe-db-instances \
-  --db-instance-identifier "${PREFIX,,}db" \
+  --db-instance-identifier "${PREFIX,,}dbinstance" \
   --query 'DBInstances[0].Endpoint.Address' \
   --output text \
   --region ${REGION})

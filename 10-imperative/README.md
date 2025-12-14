@@ -150,7 +150,7 @@ chmod +x create-dc.sh
 
 3. **Run with custom configuration**:
 ```bash
-./create-dc.sh -p myproject -e staging -o yourname
+./create-dc.sh -p myproject -e staging -o yourname -r us-west-2
 ```
 
 4. **Monitor the output** for any errors and note the final summary with connection details.
