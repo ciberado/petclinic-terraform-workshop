@@ -66,6 +66,128 @@ This creates infrastructure with:
 - Owner tagged as "alice"
 - Deployed in the us-west-2 region
 
+## Challenges of Imperative Infrastructure
+
+### Dependency Management
+
+Every resource depends on others being created first. The script must:
+- Create the VPC before subnets
+- Create subnets before instances
+- Create security groups before applying them to instances
+- Wait for the database to be ready before storing its endpoint
+
+**Error Handling**: If any step fails, subsequent steps will also fail, often in confusing ways.
+
+### State Tracking
+
+The script uses shell variables to track resource IDs, but this information is lost when the script ends. There's no built-in way to:
+- Know what resources were created
+- Update existing infrastructure
+- Clean up resources later
+
+### Idempotency Issues
+
+Running the script twice will attempt to create duplicate resources, causing errors. The script doesn't check if resources already exist.
+
+### Complexity Growth
+
+As infrastructure grows, imperative scripts become exponentially more complex:
+- More error handling needed
+- More dependency tracking required
+- Harder to maintain and modify
+- Difficult to collaborate on
+
+## When to Use Imperative Approaches
+
+Despite the challenges, imperative infrastructure has its place, mostly in automating operations. For example, it is common and useful to write a script that can be run in the case that an instance has been compromised, isolating it by updating its security group and generates a snapshot of the EBS volumes.
+
+## Running the Script
+
+### Prerequisites
+
+Ensure you have:
+- AWS CLI installed and configured with appropriate credentials
+- Bash shell environment
+- Internet connectivity for downloading the PetClinic application
+
+### Getting the Workshop Materials
+
+To learn Terraform effectively, we'll use a practical example: infrastructure for the Spring PetClinic application.
+
+```bash
+git clone https://github.com/ciberado/petclinic-terraform-workshop/
+cd petclinic-terraform-workshop/10-imperative
+```
+
+### Execution
+
+1. **Make the script executable**:
+```bash
+chmod +x create-dc.sh
+```
+
+2. **Run with default settings**:
+```bash
+./create-dc.sh
+```
+
+3. **Run with custom configuration**:
+```bash
+./create-dc.sh -p myproject -e staging -o yourname
+```
+
+4. **Monitor the output** for any errors and note the final summary with connection details.
+
+### Expected Output
+
+The script provides detailed progress information and concludes with a summary:
+
+```
+===================================
+Infrastructure creation completed!
+===================================
+VPC ID: vpc-0abc123def456
+Public Subnets: subnet-0123abc, subnet-0456def
+Private Subnets: subnet-0789ghi, subnet-0abc123
+App Security Group: sg-0def456abc
+RDS Security Group: sg-0ghi789def
+EC2 Instance ID: i-0abcdef123456789
+EC2 Public IP: 54.123.45.67
+RDS Endpoint: petclinicdb.abcd1234.us-east-1.rds.amazonaws.com:3306
+Database Name: petclinic
+Database Username: admin
+Database Password: Stored in SSM Parameter Store
+===================================
+```
+
+### Accessing the Application
+
+Once the script completes and the instance finishes bootstrapping (2-3 minutes), you can access the PetClinic application by navigating to the public IP address shown in the output.
+
+## Cleanup Considerations
+
+**Important**: The script creates resources but doesn't provide a cleanup mechanism. To avoid ongoing charges, you must manually delete the resources through the AWS console or create a separate cleanup script.
+
+Resources to delete (in order):
+1. EC2 instances
+2. RDS instances
+3. Security groups
+4. Subnets
+5. Route tables
+6. Internet gateways
+7. VPC
+
+## Next Steps
+
+After understanding imperative infrastructure:
+
+1. **Compare with declarative approaches** in the `20-declarative` directory
+2. **Experiment with modifications** to see how complexity grows
+3. **Study Infrastructure as Code tools** like Terraform that solve these challenges
+4. **Practice cloud API fundamentals** for better understanding of declarative tools
+
+Understanding imperative infrastructure provides the foundation for appreciating why declarative tools like Terraform were developed and how they solve the challenges you've experienced with this script.
+
 ## Step-by-Step Infrastructure Creation
 
 ### 1. VPC Creation: The Foundation
@@ -298,126 +420,3 @@ This script:
 4. **Starts the application** on port 80 (HTTP)
 
 **Important**: The application starts automatically when the instance boots, making it immediately available once the infrastructure is ready.
-
-## Challenges of Imperative Infrastructure
-
-### Dependency Management
-
-Every resource depends on others being created first. The script must:
-- Create the VPC before subnets
-- Create subnets before instances
-- Create security groups before applying them to instances
-- Wait for the database to be ready before storing its endpoint
-
-**Error Handling**: If any step fails, subsequent steps will also fail, often in confusing ways.
-
-### State Tracking
-
-The script uses shell variables to track resource IDs, but this information is lost when the script ends. There's no built-in way to:
-- Know what resources were created
-- Update existing infrastructure
-- Clean up resources later
-
-### Idempotency Issues
-
-Running the script twice will attempt to create duplicate resources, causing errors. The script doesn't check if resources already exist.
-
-### Complexity Growth
-
-As infrastructure grows, imperative scripts become exponentially more complex:
-- More error handling needed
-- More dependency tracking required
-- Harder to maintain and modify
-- Difficult to collaborate on
-
-## When to Use Imperative Approaches
-
-Despite the challenges, imperative infrastructure has its place, mostly in automating operations. For example, it is common and useful to write a script that can be run in the case that an instance has been compromised, isolating it by updating its security group and generates a snapshot of the EBS volumes.
-
-## Running the Script
-
-### Prerequisites
-
-Ensure you have:
-- AWS CLI installed and configured with appropriate credentials
-- Bash shell environment
-- Internet connectivity for downloading the PetClinic application
-
-### Getting the Workshop Materials
-
-To learn Terraform effectively, we'll use a practical example: infrastructure for the Spring PetClinic application.
-
-```bash
-git clone https://github.com/ciberado/petclinic-terraform-workshop/
-cd petclinic-terraform-workshop/10-imperative
-```
-
-
-### Execution
-
-1. **Make the script executable**:
-```bash
-chmod +x create-dc.sh
-```
-
-2. **Run with default settings**:
-```bash
-./create-dc.sh
-```
-
-3. **Run with custom configuration**:
-```bash
-./create-dc.sh -p myproject -e staging -o yourname
-```
-
-4. **Monitor the output** for any errors and note the final summary with connection details.
-
-### Expected Output
-
-The script provides detailed progress information and concludes with a summary:
-
-```
-===================================
-Infrastructure creation completed!
-===================================
-VPC ID: vpc-0abc123def456
-Public Subnets: subnet-0123abc, subnet-0456def
-Private Subnets: subnet-0789ghi, subnet-0abc123
-App Security Group: sg-0def456abc
-RDS Security Group: sg-0ghi789def
-EC2 Instance ID: i-0abcdef123456789
-EC2 Public IP: 54.123.45.67
-RDS Endpoint: petclinicdb.abcd1234.us-east-1.rds.amazonaws.com:3306
-Database Name: petclinic
-Database Username: admin
-Database Password: Stored in SSM Parameter Store
-===================================
-```
-
-### Accessing the Application
-
-Once the script completes and the instance finishes bootstrapping (2-3 minutes), you can access the PetClinic application by navigating to the public IP address shown in the output.
-
-## Cleanup Considerations
-
-**Important**: The script creates resources but doesn't provide a cleanup mechanism. To avoid ongoing charges, you must manually delete the resources through the AWS console or create a separate cleanup script.
-
-Resources to delete (in order):
-1. EC2 instances
-2. RDS instances
-3. Security groups
-4. Subnets
-5. Route tables
-6. Internet gateways
-7. VPC
-
-## Next Steps
-
-After understanding imperative infrastructure:
-
-1. **Compare with declarative approaches** in the `20-declarative` directory
-2. **Experiment with modifications** to see how complexity grows
-3. **Study Infrastructure as Code tools** like Terraform that solve these challenges
-4. **Practice cloud API fundamentals** for better understanding of declarative tools
-
-Understanding imperative infrastructure provides the foundation for appreciating why declarative tools like Terraform were developed and how they solve the challenges you've experienced with this script.

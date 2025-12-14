@@ -292,47 +292,24 @@ echo "Using AMI: ${AMI_ID}"
 # 10. CREATE EC2 INSTANCE
 echo "Creating EC2 instance..."
 
-# Note: You need to create userdata.sh file and replace __PREFIX__ and __ENVIRONMENT__
-# For this script, assuming userdata.sh exists in the current directory
-if [ -f "userdata.sh" ]; then
-  USER_DATA=$(sed "s/__PREFIX__/${PREFIX}/g; s/__ENVIRONMENT__/${ENVIRONMENT}/g" userdata.sh | base64 -w 0)
-else
-  echo "Warning: userdata.sh not found, creating instance without user data"
-  USER_DATA=""
-fi
 
-if [ -n "$USER_DATA" ]; then
-  INSTANCE_ID=$(aws ec2 run-instances \
-    --image-id ${AMI_ID} \
-    --instance-type ${APP_INSTANCE_TYPE} \
-    --subnet-id ${PUBLIC_SUBNET_1} \
-    --security-group-ids ${APP_SG_ID} \
-    --associate-public-ip-address \
-    --iam-instance-profile Name=LabInstanceProfile \
-    --user-data "${USER_DATA}" \
-    --block-device-mappings '[{"DeviceName":"/dev/sda1","Ebs":{"VolumeSize":8,"VolumeType":"gp3"}}]' \
-    --metadata-options "HttpEndpoint=enabled,InstanceMetadataTags=enabled" \
-    --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=${PREFIX}-${OWNER,,}},{Key=Layer,Value=computing}]" "ResourceType=volume,Tags=[{Key=Name,Value=${PREFIX}-${OWNER,,}}]" \
-    --query 'Instances[0].InstanceId' \
-    --output text \
-    --no-cli-pager \
-    --region ${REGION})
-else
-  INSTANCE_ID=$(aws ec2 run-instances \
-    --image-id ${AMI_ID} \
-    --instance-type ${APP_INSTANCE_TYPE} \
-    --subnet-id ${PUBLIC_SUBNET_1} \
-    --security-group-ids ${APP_SG_ID} \
-    --associate-public-ip-address \
-    --iam-instance-profile Name=LabInstanceProfile \
-    --block-device-mappings '[{"DeviceName":"/dev/sda1","Ebs":{"VolumeSize":8,"VolumeType":"gp3"}}]' \
-    --metadata-options "HttpEndpoint=enabled,InstanceMetadataTags=enabled" \
-    --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=${PREFIX}-${OWNER,,}},{Key=Layer,Value=computing}]" "ResourceType=volume,Tags=[{Key=Name,Value=${PREFIX}-${OWNER,,}}]" \
-    --query 'Instances[0].InstanceId' \
-    --output text \
-    --no-cli-pager \
-    --region ${REGION})
-fi
+
+INSTANCE_ID=$(aws ec2 run-instances \
+  --image-id ${AMI_ID} \
+  --instance-type ${APP_INSTANCE_TYPE} \
+  --subnet-id ${PUBLIC_SUBNET_1} \
+  --security-group-ids ${APP_SG_ID} \
+  --associate-public-ip-address \
+  --iam-instance-profile Name=LabInstanceProfile \
+  --user-data "file://userdata.sh" \
+  --block-device-mappings '[{"DeviceName":"/dev/sda1","Ebs":{"VolumeSize":8,"VolumeType":"gp3"}}]' \
+  --metadata-options "HttpEndpoint=enabled,InstanceMetadataTags=enabled" \
+  --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=${PREFIX}-${OWNER,,}},{Key=Layer,Value=computing}]" "ResourceType=volume,Tags=[{Key=Name,Value=${PREFIX}-${OWNER,,}}]" \
+  --query 'Instances[0].InstanceId' \
+  --output text \
+  --no-cli-pager \
+  --region ${REGION})
+
 
 echo "EC2 instance created: ${INSTANCE_ID}"
 
