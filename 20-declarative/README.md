@@ -34,7 +34,63 @@ git clone https://github.com/ciberado/petclinic-terraform-workshop/
 cd petclinic-terraform-workshop/20-declarative
 ```
 
-This clones a workshop repository containing progressive examples and navigates to a specific scenario (`10-spof`) that demonstrates handling single points of failure in infrastructure design.
+## Understanding Terraform Configuration Blocks
+
+Before diving into the workflow, it's helpful to understand the basic building blocks of Terraform configurations. Each Terraform file is composed of different types of blocks that serve specific purposes:
+
+### Resource Blocks
+```hcl
+resource "aws_instance" "web" {
+  ami           = "ami-12345678"
+  instance_type = "t2.micro"
+}
+```
+Resources are the core components of your infrastructure - actual cloud services like EC2 instances, S3 buckets, or security groups. Each resource has a type (like `aws_instance`) and a name (like `web`) that you choose.
+
+### Data Blocks
+```hcl
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  owners      = ["099720109477"]
+}
+```
+Data blocks query existing infrastructure or fetch information from your cloud provider. They don't create anything new - they just retrieve data you can use elsewhere in your configuration.
+
+### Variable Blocks
+```hcl
+variable "environment" {
+  description = "Environment name (dev, staging, prod)"
+  type        = string
+  default     = "dev"
+}
+```
+Variables make your configurations flexible and reusable. They define inputs that can be customized when running Terraform commands. In most languages, the equivalent is called *parameter* instead of *variable*.
+
+### Module Blocks
+```hcl
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+  name   = "my-vpc"
+  cidr   = "10.0.0.0/16"
+}
+```
+Modules are reusable packages of Terraform configuration. They can be your own code or community-maintained modules from the Terraform Registry.
+
+### Provider Blocks
+```hcl
+provider "aws" {
+  region = "us-west-2"
+}
+```
+Providers are plugins that allow Terraform to interact with different cloud platforms, SaaS providers, and APIs. Each provider offers a set of resource types.
+
+### Output Blocks
+```hcl
+output "instance_ip" {
+  value = aws_instance.web.public_ip
+}
+```
+Outputs display important information after Terraform runs, such as IP addresses or resource IDs that you might need for other tools or configurations.
 
 ## Basic Terraform Workflow
 
