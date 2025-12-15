@@ -95,6 +95,14 @@ Outputs display important information after Terraform runs, such as IP addresses
 
 ## Basic Terraform Workflow
 
+## Dependency download
+
+Terraform is based on plugins (called *providers*) and libraries (called *modules*). Before being able to execute any API call, you will require to download them.
+
+```bash
+terraform init
+```
+
 ### Understanding the Plan Phase
 
 You never want to apply infrastructure changes blindly. You need to preview what Terraform will create, modify, or destroy before making actual changes to your cloud environment.
@@ -209,3 +217,4 @@ You now have the foundational knowledge to:
 
 
 As you progress, explore Terraform modules for code reusability, remote state backends for team collaboration, and workspaces for managing multiple environments. Always remember: infrastructure as code is powerful, but with that power comes the responsibility to implement security best practices from the start.
+
