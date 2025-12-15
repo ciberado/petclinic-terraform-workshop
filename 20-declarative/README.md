@@ -16,6 +16,7 @@ Terraform releases new versions regularly, and different projects may require di
 git clone https://github.com/tfutils/tfenv.git ~/.tfenv
 mkdir ~/bin
 ln -s ~/.tfenv/bin/* ~/bin/
+PATH=$PATH:~/bin/
 tfenv install 
 tfenv use latest
 terraform --version
@@ -205,5 +206,6 @@ You now have the foundational knowledge to:
 - Deploy infrastructure with `apply`
 - Clean up resources with `destroy`
 - Validate security compliance with Checkov
+
 
 As you progress, explore Terraform modules for code reusability, remote state backends for team collaboration, and workspaces for managing multiple environments. Always remember: infrastructure as code is powerful, but with that power comes the responsibility to implement security best practices from the start.
